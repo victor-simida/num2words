@@ -1,0 +1,50 @@
+package num2word
+
+import "strconv"
+
+/*chang the num in the words to words*/
+func ConvertNumPhrase2Word(input string) string {
+	index_array := make([][2]int, 0)
+
+	flag := false
+	var temp [2]int
+	for k, v := range input {
+		if !flag && (v >= '0' && v <= '9') {
+			flag = true
+			temp[0] = k
+			continue
+		}
+
+		if flag && !(v >= '0' && v <= '9') {
+			flag = false
+			temp[1] = k
+			index_array = append(index_array, temp)
+			continue
+		}
+	}
+
+	if flag {
+		temp[1] = len(input)
+		index_array = append(index_array, temp)
+	}
+
+	result := ""
+	t := 0
+	for _, v := range index_array {
+		result += input[t:v[0]]
+
+		i, err := strconv.Atoi(input[v[0]:v[1]])
+		if err != nil {
+			return input
+		}
+
+		result += ConvertNum2Word(i)
+		t = v[1]
+	}
+
+	if result == "" {
+		return input
+	}
+
+	return result
+}
